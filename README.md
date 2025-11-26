@@ -15,7 +15,7 @@ RFC 6979 improves the security of ECDSA signatures by:
 - Ensuring that for a given message and private key, the generated signature is always the same.
 
 This is especially relevant in **threshold or multi-party settings**, where securely generating and coordinating randomness can introduce complexity and additional risk.
-This could also be relevant with use cases requiring deterministic signatures as for credentials.
+This could also be relevant with use cases requiring deterministic signatures as for credentials computation.
 
 ---
 
@@ -29,7 +29,7 @@ The following changes have been made compared to the upstream ZenGo repository:
 - The nonce `k` is generated as a function of:
   - The secret signing share (private input).
   - The message to be signed.
-- Each party derives their pwn `k` independently, ensuring consistency without interaction or shared randomness.
+- Each party derives their own `k` independently, ensuring consistency without interaction or shared randomness.
 
 > For details, see the modified `k` derivation logic in:  
 > [`src/party_one.rs`](./src/party_one.rs) and [`src/party_two.rs`](./src/party_two.rs)
