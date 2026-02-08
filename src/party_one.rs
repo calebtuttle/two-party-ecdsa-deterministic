@@ -228,7 +228,7 @@ impl Display for HDPos {
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct EcKeyPair {
     pub public_share: GE,
-    secret_share: FE,
+    pub secret_share: FE,
 }
 
 
