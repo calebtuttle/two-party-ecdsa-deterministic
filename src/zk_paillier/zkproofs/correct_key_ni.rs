@@ -19,6 +19,7 @@ use std::ops::Shl;
 use crate::curv::arithmetic::traits::*;
 use crate::curv::BigInt;
 use crate::paillier::{extract_nroot, DecryptionKey, EncryptionKey};
+#[cfg(feature = "parallel")]
 use rayon::prelude::*;
 use serde::{Serialize,Deserialize};
 
@@ -85,8 +86,11 @@ impl NICorrectKeyProof {
         let alpha_primorial: BigInt = str::parse(P).unwrap();
         let gcd_test = alpha_primorial.gcd(&ek.n);
 
-        let derived_rho_vec = (0..M2)
-            .into_par_iter()
+        #[cfg(feature = "parallel")]
+        let rho_iter = (0..M2).into_par_iter();
+        #[cfg(not(feature = "parallel"))]
+        let rho_iter = 0..M2;
+        let derived_rho_vec = rho_iter
             .map(|i| BigInt::mod_pow(&self.sigma_vec[i], &ek.n, &ek.n))
             .collect::<Vec<BigInt>>();
 

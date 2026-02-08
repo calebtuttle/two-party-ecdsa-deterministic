@@ -19,6 +19,7 @@ use std::mem;
 
 use bit_vec::BitVec;
 use rand::prelude::*;
+#[cfg(feature = "parallel")]
 use rayon::prelude::*;
 
 use super::CorrectKeyProofError;
@@ -137,12 +138,18 @@ impl RangeProofTrait for RangeProof {
         let range_scaled_third = range.div_floor(&BigInt::from(3));
         let range_scaled_two_thirds = BigInt::from(2) * &range_scaled_third;
 
-        let mut w1: Vec<_> = (0..error_factor)
-            .into_par_iter()
+        #[cfg(feature = "parallel")]
+        let w1_iter = (0..error_factor).into_par_iter();
+        #[cfg(not(feature = "parallel"))]
+        let w1_iter = 0..error_factor;
+        let mut w1: Vec<_> = w1_iter
             .map(|_| BigInt::sample_range(&range_scaled_third, &range_scaled_two_thirds))
             .collect();
 
+        #[cfg(feature = "parallel")]
         let mut w2: Vec<_> = w1.par_iter().map(|x| x - &range_scaled_third).collect();
+        #[cfg(not(feature = "parallel"))]
+        let mut w2: Vec<_> = w1.iter().map(|x| x - &range_scaled_third).collect();
 
         // with probability 1/2 switch between w1i and w2i
         for i in 0..error_factor {
@@ -152,19 +159,27 @@ impl RangeProofTrait for RangeProof {
             }
         }
 
-        let r1: Vec<_> = (0..error_factor)
-            .into_par_iter()
+        #[cfg(feature = "parallel")]
+        let r1_iter = (0..error_factor).into_par_iter();
+        #[cfg(not(feature = "parallel"))]
+        let r1_iter = 0..error_factor;
+        let r1: Vec<_> = r1_iter
             .map(|_| BigInt::sample_below(&ek.n))
             .collect();
 
-        let r2: Vec<_> = (0..error_factor)
-            .into_par_iter()
+        #[cfg(feature = "parallel")]
+        let r2_iter = (0..error_factor).into_par_iter();
+        #[cfg(not(feature = "parallel"))]
+        let r2_iter = 0..error_factor;
+        let r2: Vec<_> = r2_iter
             .map(|_| BigInt::sample_below(&ek.n))
             .collect();
 
-        let c1: Vec<_> = w1
-            .par_iter()
-            .zip(&r1)
+        #[cfg(feature = "parallel")]
+        let c1_iter = w1.par_iter().zip(&r1);
+        #[cfg(not(feature = "parallel"))]
+        let c1_iter = w1.iter().zip(&r1);
+        let c1: Vec<_> = c1_iter
             .map(|(wi, ri)| {
                 Paillier::encrypt_with_chosen_randomness(
                     ek,
@@ -176,9 +191,11 @@ impl RangeProofTrait for RangeProof {
             })
             .collect();
 
-        let c2: Vec<_> = w2
-            .par_iter()
-            .zip(&r2)
+        #[cfg(feature = "parallel")]
+        let c2_iter = w2.par_iter().zip(&r2);
+        #[cfg(not(feature = "parallel"))]
+        let c2_iter = w2.iter().zip(&r2);
+        let c2: Vec<_> = c2_iter
             .map(|(wi, ri)| {
                 Paillier::encrypt_with_chosen_randomness(
                     ek,
@@ -208,8 +225,11 @@ impl RangeProofTrait for RangeProof {
         let range_scaled_third: BigInt = range.div_floor(&BigInt::from(3));
         let range_scaled_two_thirds = BigInt::from(2) * &range_scaled_third;
         let bits_of_e = BitVec::from_bytes(&e.0);
-        let reponses: Vec<_> = (0..error_factor)
-            .into_par_iter()
+        #[cfg(feature = "parallel")]
+        let proof_iter = (0..error_factor).into_par_iter();
+        #[cfg(not(feature = "parallel"))]
+        let proof_iter = 0..error_factor;
+        let reponses: Vec<_> = proof_iter
             .map(|i| {
                 let ei = bits_of_e[i];
                 if !ei {
@@ -256,8 +276,11 @@ impl RangeProofTrait for RangeProof {
         let bits_of_e = BitVec::from_bytes(&e.0);
         let responses = &proof.0;
 
-        let verifications: Vec<bool> = (0..error_factor)
-            .into_par_iter()
+        #[cfg(feature = "parallel")]
+        let verify_iter = (0..error_factor).into_par_iter();
+        #[cfg(not(feature = "parallel"))]
+        let verify_iter = 0..error_factor;
+        let verifications: Vec<bool> = verify_iter
             .map(|i| {
                 let ei = bits_of_e[i];
                 let response = &responses[i];

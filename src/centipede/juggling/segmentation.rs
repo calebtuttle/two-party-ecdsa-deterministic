@@ -19,6 +19,7 @@ use super::proof_system::{Helgamal, Helgamalsegmented, Witness};
 use crate::centipede::Errors::{self, ErrorDecrypting};
 use crate::curv::elliptic::curves::traits::*;
 use crate::curv::{BigInt, FE, GE};
+#[cfg(feature = "parallel")]
 use rayon::prelude::*;
 use std::ops::{Shl, Shr};
 
@@ -107,8 +108,11 @@ impl Msegmentation {
         let r_vec = (0..num_of_segments)
             .map(|_| ECScalar::new_random())
             .collect::<Vec<FE>>();
-        let segmented_enc = (0..num_of_segments)
-            .into_par_iter()
+        #[cfg(feature = "parallel")]
+        let iter = (0..num_of_segments).into_par_iter();
+        #[cfg(not(feature = "parallel"))]
+        let iter = 0..num_of_segments;
+        let segmented_enc = iter
             .map(|i| {
                 //  let segment_i = mSegmentation::get_segment_k(secret,segment_size,i as u8);
                 Msegmentation::encrypt_segment_k(
@@ -173,15 +177,21 @@ impl Msegmentation {
         segment_size: &usize,
     ) -> Result<FE, Errors> {
         let limit = 2u32.pow(*segment_size as u32);
-        let test_ge_table = (1..limit)
-            .into_par_iter()
+        #[cfg(feature = "parallel")]
+        let table_iter = (1..limit).into_par_iter();
+        #[cfg(not(feature = "parallel"))]
+        let table_iter = 1..limit;
+        let test_ge_table = table_iter
             .map(|i| {
                 let test_fe = ECScalar::from(&BigInt::from(i));
                 G * &test_fe
             })
             .collect::<Vec<GE>>();
-        let vec_secret = (0..DE_vec.DE.len())
-            .into_par_iter()
+        #[cfg(feature = "parallel")]
+        let decrypt_iter = (0..DE_vec.DE.len()).into_par_iter();
+        #[cfg(not(feature = "parallel"))]
+        let decrypt_iter = 0..DE_vec.DE.len();
+        let vec_secret = decrypt_iter
             .map(|i| {
                 Msegmentation::decrypt_segment(
                     &DE_vec.DE[i],
