@@ -6,12 +6,13 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [features]
-default = ["gmp-backend", "parallel", "secp256k1-backend"]
+default = ["gmp-backend", "parallel", "secp256k1-backend", "typetag-support"]
 gmp-backend = ["rust-gmp"]
 num-bigint-backend = ["num-bigint", "num-traits", "num-integer", "getrandom/js"]
 parallel = ["rayon"]
 secp256k1-backend = ["secp256k1"]
 k256-backend = ["k256"]
+typetag-support = ["dep:typetag"]
 
 [dependencies]
 rand = "0.8"
@@ -24,7 +25,7 @@ serde = { version = "1.0.147", features = ["derive"] }
 #serde_derive = "1.0"
 itertools = "0.10"
 bit-vec = "0.6"
-typetag = "0.2.3"
+typetag = { version = "0.2.3", optional = true }
 
 [dependencies.rust-gmp]
 version = "0.5.0"

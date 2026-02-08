@@ -35,7 +35,7 @@ pub struct DLogProof {
     pub pk_t_rand_commitment: GE,
     pub challenge_response: FE,
 }
-#[typetag::serde]
+#[cfg_attr(feature = "typetag-support", typetag::serde)]
 impl Value for DLogProof {
     fn as_any(&self) -> &dyn Any {
         self

@@ -132,7 +132,7 @@ pub struct Secp256k1Point {
 
 // ============ Trait Impls ============
 
-#[typetag::serde]
+#[cfg_attr(feature = "typetag-support", typetag::serde)]
 impl Value for Secp256k1Point {
     fn as_any(&self) -> &dyn Any { self }
     fn type_name(&self) -> &str { "Secp256k1Point" }

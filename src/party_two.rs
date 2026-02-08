@@ -81,7 +81,7 @@ pub struct PartialSig {
 pub struct Party2Private {
     x2: FE,
 }
-#[typetag::serde]
+#[cfg_attr(feature = "typetag-support", typetag::serde)]
 impl Value for EphEcKeyPair2 {
     fn as_any(&self) -> &dyn Any {
         self
@@ -118,7 +118,7 @@ pub struct EphKeyGenFirstMsg {
     pub zk_pok_commitment: BigInt,
 }
 
-#[typetag::serde]
+#[cfg_attr(feature = "typetag-support", typetag::serde)]
 impl Value for EphKeyGenFirstMsg {
     fn as_any(&self) -> &dyn Any {
         self
@@ -147,7 +147,7 @@ pub struct PDLFirstMessage {
 }
 
 
-#[typetag::serde]
+#[cfg_attr(feature = "typetag-support", typetag::serde)]
 impl Value for PDLFirstMessage {
     fn as_any(&self) -> &dyn Any {
         self
@@ -172,7 +172,7 @@ pub struct PDL2decommit {
 }
 
 
-#[typetag::serde]
+#[cfg_attr(feature = "typetag-support", typetag::serde)]
 impl Value for PDL2decommit {
     fn as_any(&self) -> &dyn Any {
         self
@@ -195,7 +195,7 @@ pub struct PDLSecondMessage {
 }
 
 
-#[typetag::serde]
+#[cfg_attr(feature = "typetag-support", typetag::serde)]
 impl Value for PDLSecondMessage {
     fn as_any(&self) -> &dyn Any {
         self

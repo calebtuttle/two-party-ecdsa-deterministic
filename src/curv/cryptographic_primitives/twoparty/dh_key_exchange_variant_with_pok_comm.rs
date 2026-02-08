@@ -31,7 +31,7 @@ use crate::party_two::PDLFirstMessage;
 const SECURITY_BITS: usize = 256;
 
 
-#[typetag::serde]
+#[cfg_attr(feature = "typetag-support", typetag::serde)]
 impl Value for EcKeyPairDHPoK {
     fn as_any(&self) -> &dyn Any {
         self
@@ -62,7 +62,7 @@ pub struct CommWitnessDHPoK {
     pub d_log_proof: DLogProof,
 }
 
-#[typetag::serde]
+#[cfg_attr(feature = "typetag-support", typetag::serde)]
 impl Value for CommWitnessDHPoK {
     fn as_any(&self) -> &dyn Any {
         self
@@ -79,7 +79,7 @@ impl Display for CommWitnessDHPoK {
     }
 }
 
-#[typetag::serde]
+#[cfg_attr(feature = "typetag-support", typetag::serde)]
 impl Value for Party1FirstMessage {
     fn as_any(&self) -> &dyn Any {
         self

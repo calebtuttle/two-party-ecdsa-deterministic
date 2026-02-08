@@ -14,7 +14,7 @@ use crate::party_one::{PDLdecommit, v, Value};
 pub struct ChainCode1 {
     pub chain_code: BigInt,
 }
-#[typetag::serde]
+#[cfg_attr(feature = "typetag-support", typetag::serde)]
 impl Value for ChainCode1 {
     fn as_any(&self) -> &dyn Any {
         self

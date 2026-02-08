@@ -25,7 +25,7 @@ pub struct MasterKey1 {
     pub private: party_one::Party1Private,
     chain_code: BigInt,
 }
-#[typetag::serde]
+#[cfg_attr(feature = "typetag-support", typetag::serde)]
 impl Value for MasterKey1 {
     fn as_any(&self) -> &dyn Any {
         self

@@ -53,7 +53,7 @@ use crate::Error::{self, InvalidSig};
 use hmac::{Hmac, Mac};
 use sha2::{Digest, Sha256};
 
-#[typetag::serde]
+#[cfg_attr(feature = "typetag-support", typetag::serde)]
 pub trait Value: Sync + Send + Any {
     fn as_any(&self) -> &dyn Any;
     fn type_name(&self) -> &str;
@@ -69,7 +69,7 @@ pub struct v {
     pub value: String,
 }
 
-#[typetag::serde]
+#[cfg_attr(feature = "typetag-support", typetag::serde)]
 impl Value for HDPos {
     fn as_any(&self) -> &dyn Any {
         self
@@ -80,7 +80,7 @@ impl Value for HDPos {
     }
 }
 
-#[typetag::serde]
+#[cfg_attr(feature = "typetag-support", typetag::serde)]
 impl Value for KeyGenFirstMsg {
     fn as_any(&self) -> &dyn Any {
         self
@@ -91,7 +91,7 @@ impl Value for KeyGenFirstMsg {
     }
 }
 
-#[typetag::serde]
+#[cfg_attr(feature = "typetag-support", typetag::serde)]
 impl Value for CommWitness {
     fn as_any(&self) -> &dyn Any {
         self
@@ -102,7 +102,7 @@ impl Value for CommWitness {
     }
 }
 
-#[typetag::serde]
+#[cfg_attr(feature = "typetag-support", typetag::serde)]
 impl Value for EcKeyPair {
     fn as_any(&self) -> &dyn Any {
         self
@@ -113,7 +113,7 @@ impl Value for EcKeyPair {
     }
 }
 
-#[typetag::serde]
+#[cfg_attr(feature = "typetag-support", typetag::serde)]
 impl Value for v {
     fn as_any(&self) -> &dyn Any {
         self
@@ -124,7 +124,7 @@ impl Value for v {
     }
 }
 
-#[typetag::serde]
+#[cfg_attr(feature = "typetag-support", typetag::serde)]
 impl Value for PaillierKeyPair {
     fn as_any(&self) -> &dyn Any {
         self
@@ -135,7 +135,7 @@ impl Value for PaillierKeyPair {
     }
 }
 
-#[typetag::serde]
+#[cfg_attr(feature = "typetag-support", typetag::serde)]
 impl Value for Party1Private {
     fn as_any(&self) -> &dyn Any {
         self
@@ -146,7 +146,7 @@ impl Value for Party1Private {
     }
 }
 
-#[typetag::serde]
+#[cfg_attr(feature = "typetag-support", typetag::serde)]
 impl Value for PDLdecommit {
     fn as_any(&self) -> &dyn Any {
         self
@@ -157,7 +157,7 @@ impl Value for PDLdecommit {
     }
 }
 
-#[typetag::serde]
+#[cfg_attr(feature = "typetag-support", typetag::serde)]
 impl Value for EphEcKeyPair {
     fn as_any(&self) -> &dyn Any {
         self

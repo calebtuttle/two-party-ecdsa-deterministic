@@ -56,7 +56,7 @@ pub struct Secp256k1Point {
     ge: PK,
 }
 
-#[typetag::serde]
+#[cfg_attr(feature = "typetag-support", typetag::serde)]
 impl Value for Secp256k1Point {
     fn as_any(&self) -> &dyn Any {
         self
