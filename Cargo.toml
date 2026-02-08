@@ -6,10 +6,12 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [features]
-default = ["gmp-backend", "parallel"]
+default = ["gmp-backend", "parallel", "secp256k1-backend"]
 gmp-backend = ["rust-gmp"]
 num-bigint-backend = ["num-bigint", "num-traits", "num-integer", "getrandom/js"]
 parallel = ["rayon"]
+secp256k1-backend = ["secp256k1"]
+k256-backend = ["k256"]
 
 [dependencies]
 rand = "0.8"
@@ -33,6 +35,12 @@ optional = true
 [dependencies.secp256k1]
 version = "0.21.0"
 features = ["rand", "serde"]
+optional = true
+
+[dependencies.k256]
+version = "0.13"
+features = ["arithmetic"]
+optional = true
 
 [dependencies.num-bigint]
 version = "0.4"
