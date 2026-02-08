@@ -52,7 +52,6 @@ use crate::Error::{self, InvalidSig};
 
 use hmac::{Hmac, Mac};
 use sha2::{Digest, Sha256};
-use gmp::mpz::Mpz;
 
 #[typetag::serde]
 pub trait Value: Sync + Send + Any {
@@ -581,13 +580,9 @@ impl EphKeyGenFirstMsg {
         let mut k = vec![0x00u8; hlen / 8];
 
         // step d.
-        let mut vec_k: &[u8] = &k;
-        let mut k_mpz: Mpz = Mpz::from(vec_k);
-
         let mut share_scalar = private_share.secret_share.clone();
         let mut share_scalar_bytes = share_scalar.get_element().clone();
         let share_bytes: &[u8] = &share_scalar_bytes.serialize_secret();
-        let mut share_mpz = Mpz::from(share_bytes);
         
         let mut hmac = Hmac::<Sha256>::new_from_slice(&k).unwrap();
         hmac.update(&v);

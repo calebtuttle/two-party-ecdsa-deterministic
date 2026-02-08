@@ -17,7 +17,12 @@ mod secp256k1instance {
 pub use self::secp256k1instance::*;
 
 pub mod arithmetic;
+
+#[cfg(feature = "gmp-backend")]
 pub use arithmetic::big_gmp::BigInt;
+
+#[cfg(feature = "num-bigint-backend")]
+pub use arithmetic::big_num::BigInt;
 
 pub mod cryptographic_primitives;
 

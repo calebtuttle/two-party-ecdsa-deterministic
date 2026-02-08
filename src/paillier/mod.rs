@@ -17,7 +17,11 @@ use serde::{Serialize,Deserialize};
 /// Main struct onto which most operations are added.
 pub struct Paillier;
 
+#[cfg(feature = "gmp-backend")]
 pub use crate::curv::arithmetic::big_gmp::BigInt;
+
+#[cfg(feature = "num-bigint-backend")]
+pub use crate::curv::arithmetic::big_num::BigInt;
 
 /// Keypair from which encryption and decryption keys can be derived.
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]

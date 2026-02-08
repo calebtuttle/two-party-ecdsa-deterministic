@@ -16,5 +16,10 @@
 
 const HEX_RADIX: u8 = 16;
 
+#[cfg(feature = "gmp-backend")]
 pub mod big_gmp;
+
+#[cfg(feature = "num-bigint-backend")]
+pub mod big_num;
+
 pub mod traits;
