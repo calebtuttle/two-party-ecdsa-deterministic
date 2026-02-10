@@ -40,36 +40,45 @@ use wasm_bindgen::prelude::*;
 
 #[cfg(target_arch = "wasm32")]
 #[wasm_bindgen(inline_js = "
+let g = null;
+let pool = null;
+function B() {
+    if (!g) {
+        const gmp = globalThis.__gmpWasm;
+        if (!gmp) throw new Error('gmp-wasm not initialized. Set globalThis.__gmpWasm = await init() from gmp-wasm first.');
+        g = gmp.binding;
+        const a = g.mpz_t(), b = g.mpz_t(), c = g.mpz_t(), d = g.mpz_t();
+        g.mpz_init(a); g.mpz_init(b); g.mpz_init(c); g.mpz_init(d);
+        pool = [a, b, c, d];
+    }
+    return g;
+}
 export function gmp_mod_pow(base_hex, exp_hex, mod_hex) {
-    const gmp = globalThis.__gmpWasm;
-    if (!gmp) throw new Error('gmp-wasm not initialized. Set globalThis.__gmpWasm = await init() from gmp-wasm first.');
-    return gmp.calculate(g => {
-        const b = g.Integer(base_hex, 16);
-        const e = g.Integer(exp_hex, 16);
-        const m = g.Integer(mod_hex, 16);
-        return b.pow(e, m).toString(16);
-    });
+    const b = B();
+    const [bp, ep, mp, rp] = pool;
+    b.mpz_set_string(bp, base_hex, 16);
+    b.mpz_set_string(ep, exp_hex, 16);
+    b.mpz_set_string(mp, mod_hex, 16);
+    b.mpz_powm(rp, bp, ep, mp);
+    return b.mpz_to_string(rp, 16);
 }
 export function gmp_mod_mul(a_hex, b_hex, mod_hex) {
-    const a = BigInt('0x' + (a_hex || '0'));
-    const b = BigInt('0x' + (b_hex || '0'));
-    const m = BigInt('0x' + (mod_hex || '1'));
-    if (m === 0n) return '0';
-    return (((a % m) * (b % m)) % m).toString(16);
+    const b = B();
+    const [ap, bp2, mp, tp] = pool;
+    b.mpz_set_string(ap, a_hex, 16);
+    b.mpz_set_string(bp2, b_hex, 16);
+    b.mpz_set_string(mp, mod_hex, 16);
+    b.mpz_mul(tp, ap, bp2);
+    b.mpz_mod(tp, tp, mp);
+    return b.mpz_to_string(tp, 16);
 }
 export function gmp_mod_inv(a_hex, mod_hex) {
-    let a = BigInt('0x' + (a_hex || '0'));
-    const m = BigInt('0x' + (mod_hex || '1'));
-    if (m === 0n) return '0';
-    a = ((a % m) + m) % m;
-    let [old_r, r] = [a, m];
-    let [old_s, s] = [1n, 0n];
-    while (r !== 0n) {
-        const q = old_r / r;
-        [old_r, r] = [r, old_r - q * r];
-        [old_s, s] = [s, old_s - q * s];
-    }
-    return ((old_s % m + m) % m).toString(16);
+    const b = B();
+    const [ap, mp, rp] = pool;
+    b.mpz_set_string(ap, a_hex, 16);
+    b.mpz_set_string(mp, mod_hex, 16);
+    b.mpz_invert(rp, ap, mp);
+    return b.mpz_to_string(rp, 16);
 }
 ")]
 extern "C" {
