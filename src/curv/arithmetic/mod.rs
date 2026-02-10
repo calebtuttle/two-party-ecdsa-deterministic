@@ -22,4 +22,7 @@ pub mod big_gmp;
 #[cfg(feature = "num-bigint-backend")]
 pub mod big_num;
 
+#[cfg(feature = "js-bigint-backend")]
+pub mod big_js;
+
 pub mod traits;

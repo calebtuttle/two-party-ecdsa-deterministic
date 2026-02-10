@@ -9,6 +9,7 @@ edition = "2021"
 default = ["gmp-backend", "parallel", "secp256k1-backend", "typetag-support"]
 gmp-backend = ["rust-gmp"]
 num-bigint-backend = ["num-bigint", "num-traits", "num-integer", "getrandom/js"]
+js-bigint-backend = ["num-bigint", "num-traits", "num-integer", "getrandom/js", "wasm-bindgen"]
 parallel = ["rayon"]
 secp256k1-backend = ["secp256k1"]
 k256-backend = ["k256"]
@@ -56,6 +57,10 @@ version = "0.1"
 optional = true
 
 [dependencies.getrandom]
+version = "0.2"
+optional = true
+
+[dependencies.wasm-bindgen]
 version = "0.2"
 optional = true
 

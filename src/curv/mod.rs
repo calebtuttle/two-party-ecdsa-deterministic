@@ -24,6 +24,9 @@ pub use arithmetic::big_gmp::BigInt;
 #[cfg(feature = "num-bigint-backend")]
 pub use arithmetic::big_num::BigInt;
 
+#[cfg(feature = "js-bigint-backend")]
+pub use arithmetic::big_js::BigInt;
+
 pub mod cryptographic_primitives;
 
 #[derive(Copy, PartialEq, Eq, Clone, Debug)]
