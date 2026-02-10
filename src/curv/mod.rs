@@ -24,6 +24,9 @@ pub use arithmetic::big_gmp::BigInt;
 #[cfg(feature = "num-bigint-backend")]
 pub use arithmetic::big_num::BigInt;
 
+#[cfg(feature = "gmp-wasm-backend")]
+pub use arithmetic::big_gmp_wasm::BigInt;
+
 pub mod cryptographic_primitives;
 
 #[derive(Copy, PartialEq, Eq, Clone, Debug)]

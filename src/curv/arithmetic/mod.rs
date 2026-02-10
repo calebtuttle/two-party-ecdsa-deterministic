@@ -22,4 +22,7 @@ pub mod big_gmp;
 #[cfg(feature = "num-bigint-backend")]
 pub mod big_num;
 
+#[cfg(feature = "gmp-wasm-backend")]
+pub mod big_gmp_wasm;
+
 pub mod traits;

@@ -23,6 +23,9 @@ pub use crate::curv::arithmetic::big_gmp::BigInt;
 #[cfg(feature = "num-bigint-backend")]
 pub use crate::curv::arithmetic::big_num::BigInt;
 
+#[cfg(feature = "gmp-wasm-backend")]
+pub use crate::curv::arithmetic::big_gmp_wasm::BigInt;
+
 /// Keypair from which encryption and decryption keys can be derived.
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Keypair {
