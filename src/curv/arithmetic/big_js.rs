@@ -35,10 +35,15 @@ use wasm_bindgen::prelude::*;
 
 #[cfg(target_arch = "wasm32")]
 #[wasm_bindgen(inline_js = "
+function fromHex(h) {
+    if (!h || h === '0') return 0n;
+    if (h[0] === '-') return -BigInt('0x' + h.slice(1));
+    return BigInt('0x' + h);
+}
 export function js_mod_pow(base_hex, exp_hex, mod_hex) {
-    const b = BigInt('0x' + (base_hex || '0'));
-    const e = BigInt('0x' + (exp_hex || '0'));
-    const m = BigInt('0x' + (mod_hex || '1'));
+    const b = fromHex(base_hex);
+    const e = fromHex(exp_hex);
+    const m = fromHex(mod_hex) || 1n;
     if (m === 0n) return '0';
     let result = 1n;
     let base = ((b % m) + m) % m;
@@ -51,15 +56,17 @@ export function js_mod_pow(base_hex, exp_hex, mod_hex) {
     return result.toString(16);
 }
 export function js_mod_mul(a_hex, b_hex, mod_hex) {
-    const a = BigInt('0x' + (a_hex || '0'));
-    const b = BigInt('0x' + (b_hex || '0'));
-    const m = BigInt('0x' + (mod_hex || '1'));
+    const a = fromHex(a_hex);
+    const b = fromHex(b_hex);
+    const m = fromHex(mod_hex) || 1n;
     if (m === 0n) return '0';
-    return (((a % m) * (b % m)) % m).toString(16);
+    const am = ((a % m) + m) % m;
+    const bm = ((b % m) + m) % m;
+    return ((am * bm) % m).toString(16);
 }
 export function js_mod_inv(a_hex, mod_hex) {
-    let a = BigInt('0x' + (a_hex || '0'));
-    const m = BigInt('0x' + (mod_hex || '1'));
+    let a = fromHex(a_hex);
+    const m = fromHex(mod_hex) || 1n;
     if (m === 0n) return '0';
     a = ((a % m) + m) % m;
     let [old_r, r] = [a, m];
