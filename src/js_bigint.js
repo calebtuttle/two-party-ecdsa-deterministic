@@ -53,5 +53,6 @@ export function js_mod_inv(a_hex, mod_hex) {
         [old_r, r] = [r, old_r - q * r];
         [old_s, s] = [s, old_s - q * s];
     }
+    if (old_r !== 1n) throw new Error('Modular inverse does not exist');
     return ((old_s % m + m) % m).toString(16);
 }
