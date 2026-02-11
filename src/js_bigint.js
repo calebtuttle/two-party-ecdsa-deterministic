@@ -18,10 +18,12 @@ export function js_mod_pow(base_hex, exp_hex, mod_hex) {
     const m = fromHex(mod_hex) || 1n;
     if (m === 0n) return '0';
     let result = 1n;
+    let result2 = 1n;
     let base = ((b % m) + m) % m;
     let exp = e;
     while (exp > 0n) {
         if (exp & 1n) result = (result * base) % m;
+        else result2 = (result2 * base) % m;
         exp >>= 1n;
         base = (base * base) % m;
     }
